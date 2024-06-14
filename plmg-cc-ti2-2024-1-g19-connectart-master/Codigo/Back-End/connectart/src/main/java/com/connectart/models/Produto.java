@@ -1,35 +1,35 @@
 package com.connectart.models;
 
 public class Produto {
-    private int produtoId;  // Atributo correspondente a produto_id na tabela
-    private String produtoNome;  // Atributo correspondente a produto_nome na tabela
-    private double produtoPreco;  // Atributo correspondente a produto_preco na tabela (DECIMAL)
-    private String produtoDescricao;  // Atributo correspondente a produto_descricao na tabela
-
+    private int produtoId;
+    private String produtoNome;  
+    private double produtoPreco;  
+    private String produtoDescricao;  
+    private String artistaEmail;
+    private String imagePath;
     // Construtor padrão (sem argumentos)
     public Produto() {
-        this.produtoId = -1;
-        this.produtoNome = "";
-        this.produtoPreco = 0.0;
-        this.produtoDescricao = "";
+       
     }
 
     // Construtor com argumentos
-    public Produto(int produtoId, String produtoNome, double produtoPreco, String produtoDescricao) {
-        this.produtoId = produtoId;
+    public Produto(String produtoNome, double produtoPreco, String produtoDescricao, String artistaEmail, String imagePath) {
+        
         this.produtoNome = produtoNome;
         this.produtoPreco = produtoPreco;
         this.produtoDescricao = produtoDescricao;
+        this.artistaEmail = artistaEmail;
+        this.imagePath = imagePath;
     }
 
     // Métodos getter e setter para os atributos
 
-    public int getProdutoId() {
-        return produtoId;
-    }
-
     public void setProdutoId(int produtoId) {
         this.produtoId = produtoId;
+    }
+
+    public int getProdutoId() {
+        return produtoId;
     }
 
     public String getProdutoNome() {
@@ -56,9 +56,23 @@ public class Produto {
         this.produtoDescricao = produtoDescricao;
     }
 
+    public String getArtistaEmail() {
+        return artistaEmail;
+    }
+
+    public void setArtistaEmail(String artistaEmail) {
+        this.artistaEmail = artistaEmail;
+    }
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
     // Método toString para representar o objeto como uma string
     @Override
     public String toString() {
-        return "Produto [produtoId=" + produtoId + ", produtoNome=" + produtoNome + ", produtoPreco=" + produtoPreco + ", produtoDescricao=" + produtoDescricao + "]";
+        return "Produto [produtoNome=" + produtoNome + ", produtoPreco=" + produtoPreco + ", produtoDescricao=" + produtoDescricao + "]";
     }
 }

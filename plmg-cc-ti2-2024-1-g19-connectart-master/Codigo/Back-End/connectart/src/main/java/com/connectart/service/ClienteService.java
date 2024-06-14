@@ -1,41 +1,83 @@
-package service;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import dao.ClienteDAO;
-import models.Cliente;
+package com.connectart.service;
+import com.connectart.dao.ClienteDAO;
+import com.connectart.models.Cliente;
+import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
 
-
 public class ClienteService {
 
-	private CLienteDAO clienteDAO;
+    private ClienteDAO clienteDAO = new ClienteDAO();
 
-	public ClienteService() {
-        //aqui ta faltando acionar a DAO pra fazer a inserção no banco de dados
-		try {
-			clienteDAO = new clienteDAO("cliente.dat");
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		}
-	}
+    public Object cadastrarCliente(Request request, Response response) {
+        Gson gson = new Gson();
+        Cliente cliente = gson.fromJson(request.body(), Cliente.class);
 
-	public Object add(Request request, Response response) {
-		String e-mail = request.queryParams("E-mail");
-        String nome = request.queryParams("Nome");
-        String telefone = request.queryParams("Telefone");
-        String senha = request.queryParams("Senha");
-        int compras=0;
-        int id =1;
+        clienteDAO.inserirCliente(cliente);
+        response.status(201); // Created
+        return gson.toJson(cliente);
+    }
 
-        Cliente cliente = new Cliente(id, nome, e-mail, senha, compras, telefone);
+    public boolean loginCliente(Request request, Response response) {
+        try {
+            Gson gson = new Gson();
+            Cliente cliente = gson.fromJson(request.body(), Cliente.class);
+            System.out.println("Email recebido: " + cliente.getClienteEmail());
+            System.out.println("Senha recebida: " + cliente.getClienteSenha());
+            
+            Cliente aux = clienteDAO.autenticarCliente(cliente.getClienteEmail());
+            if (aux != null) {
+                System.out.println("Usuário encontrado: " + aux.getClienteEmail());
+                if (cliente.getClienteSenha().equals(aux.getClienteSenha())) {
+                    // Se o usuário for autenticado com sucesso
+                    response.status(200); // OK
+                    response.type("application/json");
+                    return true;
+                } else {
+                    System.out.println("Senha incorreta.");
+                }
+            } else {
+                System.out.println("Usuário não encontrado.");
+            }
+            // Se as credenciais estiverem incorretas
+            response.status(401); // Unauthorized
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Erro durante o login: " + e.getMessage());
+            response.status(500); // Internal Server Error
+            return false;
+        }
+    }
 
-		clienteDAO.add(cliente);
-
-		response.status(201); // 201 Created
-		return id;
-	}
+    public boolean excluirCliente(Request request, Response response) {
+        try {
+            Gson gson = new Gson();
+            Cliente cliente = gson.fromJson(request.body(), Cliente.class);
+            
+            // Verificar se o cliente existe antes de excluir
+            if (clienteDAO.autenticarCliente(cliente.getClienteEmail()) != null) {
+                // Excluir o cliente
+                boolean excluido = clienteDAO.excluirCliente(cliente.getClienteEmail());
+                
+                if (excluido) {
+                    response.status(200); // OK
+                    response.type("application/json");
+                    return true;
+                } else {
+                    response.status(500); // Internal Server Error
+                    return false;
+                }
+            } else {
+                response.status(404); // Not Found (Cliente não encontrado)
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.status(500); // Internal Server Error
+            return false;
+        }
+    }
+    
+    
 }

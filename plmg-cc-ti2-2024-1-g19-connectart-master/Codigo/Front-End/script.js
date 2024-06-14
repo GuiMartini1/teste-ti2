@@ -64,3 +64,28 @@ for (i = 1; i <= 3; i++) {
     var preço = Math.random() * 99;
     alterarPopular(`popular${i}`, null, `Popular ${numero}`, "Elemento gerado aleatoriamente", preço)
 }
+
+//----- manda requisição para criar cliente -----
+/*function cadastrarCliente() {
+    const cliente = {
+      
+      clienteNome: document.getElementById('clienteNome').value,
+      clienteEmail: document.getElementById('clienteEmail').value,
+      clienteSenha: document.getElementById('clienteSenha').value,
+      
+    };
+
+    fetch('http://localhost:4567/cliente', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(cliente)
+    }).then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      }); 
+  }*/

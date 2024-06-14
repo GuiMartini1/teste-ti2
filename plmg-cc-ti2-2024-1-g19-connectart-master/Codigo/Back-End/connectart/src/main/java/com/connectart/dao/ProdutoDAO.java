@@ -1,79 +1,79 @@
 package com.connectart.dao;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import com.connectart.models.Produto;
 import java.sql.*;
 
-import com.connectart.models.Produto;
-
 public class ProdutoDAO extends DAO {
-    private Connection conexao;
 
     public ProdutoDAO() {
-       super();
-        conectar();
+        super();
+        conectar();    
     }
 
-    public boolean inserirProduto(Produto produto) {
-        boolean status = false;
+    public int inserirProduto(Produto produto) {
+        int produtoId = -1;
         try {
-            Statement st = conexao.createStatement();
-            String sql = "INSERT INTO connectart.produto (produto_id, produto_nome, produto_preco, produto_descricao) "
-                       + "VALUES (" + produto.getProdutoId() + ", '" + produto.getProdutoNome() + "', " + produto.getProdutoPreco() + ", '" + produto.getProdutoDescricao() + "');";
-            st.executeUpdate(sql);
-            st.close();
-            status = true;
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        return status;
-    }
-
-    public boolean atualizarProduto(Produto produto) {
-        boolean status = false;
-        try {
-            Statement st = conexao.createStatement();
-            String sql = "UPDATE connectart.produto SET produto_nome = '" + produto.getProdutoNome() + "', produto_preco = " + produto.getProdutoPreco() + ", produto_descricao = '" + produto.getProdutoDescricao() + "' WHERE produto_id = " + produto.getProdutoId();
-            st.executeUpdate(sql);
-            st.close();
-            status = true;
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        return status;
-    }
-
-    public boolean excluirProduto(int produtoId) {
-        boolean status = false;
-        try {
-            Statement st = conexao.createStatement();
-            String sql = "DELETE FROM connectart.produto WHERE produto_id = " + produtoId;
-            st.executeUpdate(sql);
-            st.close();
-            status = true;
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        return status;
-    }
-
-    public Produto[] getProdutos() {
-        Produto[] produtos = null;
-
-        try {
-            Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            ResultSet rs = st.executeQuery("SELECT * FROM connectart.produto");
-
+            String sql = "INSERT INTO connectart.produto (produto_nome, produto_preco, produto_descricao, artista_email, image_path) "
+                       + "VALUES (?, ?, ?, ?, ?) RETURNING produto_id";
+            PreparedStatement pst = conexao.prepareStatement(sql);
+            pst.setString(1, produto.getProdutoNome());
+            pst.setDouble(2, produto.getProdutoPreco());
+            pst.setString(3, produto.getProdutoDescricao());
+            pst.setString(4, produto.getArtistaEmail());
+            pst.setString(5, produto.getImagePath());
+            ResultSet rs = pst.executeQuery();
             if (rs.next()) {
-                produtos = new Produto[rs.getRow()];
-                rs.beforeFirst();
-
-                for (int i = 0; rs.next(); i++) {
-                    produtos[i] = new Produto(rs.getInt("produto_id"), rs.getString("produto_nome"), rs.getDouble("produto_preco"), rs.getString("produto_descricao"));
-                }
+                produtoId = rs.getInt(1);
             }
+            rs.close();
+            pst.close();
+        } catch (SQLException u) {
+            throw new RuntimeException(u);
+        }
+        return produtoId;
+    }
+
+    public boolean excluirProduto(int id) {
+        try {
+            String sql = "DELETE FROM connectart.produto WHERE produto_id = ?";
+            PreparedStatement st = conexao.prepareStatement(sql);
+            st.setInt(1, id);
+            int rowsAffected = st.executeUpdate();
+            st.close();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Produto autenticarProduto(int id) {
+        Produto produto = null;
+        try {
+            String sql = "SELECT * FROM connectart.produto WHERE produto_id = ?";
+            PreparedStatement st = conexao.prepareStatement(sql);
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                String nome = rs.getString("produto_nome");
+                double preco = rs.getDouble("produto_preco");
+                String descricao = rs.getString("produto_descricao");
+                String artistaEmail = rs.getString("artista_email");
+                String imagePath = rs.getString("image_path");
+                produto = new Produto(nome, preco, descricao, artistaEmail, imagePath);
+                System.out.println("Produto autenticado: " + produto.getProdutoNome());
+            } else {
+                System.out.println("Nenhum produto encontrado com o id: " + id);
+            }
+            rs.close();
             st.close();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao autenticar produto: " + e.getMessage(), e);
         }
-        return produtos;
+        return produto;
     }
 }
-

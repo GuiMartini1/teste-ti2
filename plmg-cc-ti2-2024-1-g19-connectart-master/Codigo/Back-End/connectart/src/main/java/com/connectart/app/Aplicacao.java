@@ -1,41 +1,67 @@
 package com.connectart.app;
 
-import com.connectart.dao.ArtistaDAO;
-import com.connectart.dao.AvalClienteDAO;
-import com.connectart.dao.AvalProdDAO;
-import com.connectart.dao.ClienteDAO;
-import com.connectart.dao.ProdutoDAO;
-import com.connectart.models.Artista;
-import com.connectart.models.AvalCliente;
-import com.connectart.models.AvalProd;
-import com.connectart.models.Cliente;
-import com.connectart.models.Produto;
-import com.connectart.service.ProdutoService;
-import com.connectart.service.ClienteService;
 
-import spark.Spark.*;
-import com.connectart.*;
+
+import static spark.Spark.*;
+import com.connectart.service.ArtistaService;
+import com.connectart.service.ClienteService;
+import com.connectart.service.ProdutoService;
 
 public class Aplicacao {
-	
-	private static ProdutoService produtoService = new ProdutoService();
-    private static ClienteService clienteService = new ClienteService();
-	
+    public static ClienteService clienteService = new ClienteService();
+    public static ArtistaService artistaService = new ArtistaService();
+    public static ProdutoService produtoService = new ProdutoService();
     public static void main(String[] args) {
-        
-        port(6789);
+        port(4567);
+        // Configurar CORS
+        enableCORS("*", "*", "*");
 
-        post("/produto", (request, response) -> clienteService.add(request, response));
+        System.out.println("Servidor rodando em http://localhost:4567");
+        //caminho para enviar informaçoes do cliente e artista do js no formato json para criacao de clientes e artistas
+        post("/cliente", (req, res) -> clienteService.cadastrarCliente(req, res));
+        post("/artista", (req, res) -> artistaService.cadastrarArtista(req, res));
 
-        get("/produto/:id", (request, response) -> produtoService.get(request, response));
+        //caminho para enviar informaçoes do login do cliente e artista do js no formato json
+        put("/login/cliente", (req, res) -> clienteService.loginCliente(req, res));
+        put("/login/artista", (req, res) -> artistaService.loginArtista(req, res));
 
-        get("/produto/update/:id", (request, response) -> produtoService.update(request, response));
+        //caminho para deletar cliente e artista
+        delete("/deletar/cliente", (request, response) -> clienteService.excluirCliente(request, response));
+        delete("/deletar/artista", (req, res) -> artistaService.excluirArtista(req,res));
 
-        get("/produto/delete/:id", (request, response) -> produtoService.remove(request, response));
 
-        get("/produto", (request, response) -> produtoService.getAll(request, response));
-               
-    }
-    
+        // criar produto
+        post("/produto", (req, res) -> produtoService.cadastrarProduto(req, res));
+
+        //nao ta pegando aida
+        delete("/produto/:id", (req, res) -> produtoService.excluirProduto(req, res));
+        get("/produto/:id", (req, res) -> produtoService.autenticarProduto(req, res));
+}
+
+
+// Método para configurar CORS
+private static void enableCORS(final String origin, final String methods, final String headers) {
+    options("/*", (request, response) -> {
+        String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
+        if (accessControlRequestHeaders != null) {
+            response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
+        }
+
+        String accessControlRequestMethod = request.headers("Access-Control-Request-Method");
+        if (accessControlRequestMethod != null) {
+            response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
+        }
+
+        return "OK";
+    });
+
+    before((request, response) -> {
+        response.header("Access-Control-Allow-Origin", origin);
+        response.header("Access-Control-Request-Method", methods);
+        response.header("Access-Control-Allow-Headers", headers);
+        // Note: this may or may not be necessary in your particular application
+        response.type("application/json");
+    });
+}
 }
 

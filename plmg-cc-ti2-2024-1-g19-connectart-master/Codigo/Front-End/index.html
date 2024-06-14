@@ -14,18 +14,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-
-<script type="text/javascript">
-
-    function addIdToPath(form_name, base_url){
-        var your_form = document.getElementById(form_name);
-        var id = your_form.elements.namedItem("id").value;
-        action_src = base_url + id;
-        your_form.action = action_src;
-    }
-    
-    </script>
-
 <body class="bg-white">
     <!--
         HEADER
@@ -188,36 +176,23 @@
             </div>
         </div>
     </div>
-    <!-- REGISTRAR ARTISTA -->
+    <!-- REGISTRAR NEGOCIO -->
     <div class="modal fade" id="modalRegistrarNegocio" tabindex="-1" aria-labelledby="modalRegistrarNegocioLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-body">
-                    <h1 class="text-center">Registrar como artista</h1>
+                    <h1 class="text-center">Registrar como negócio</h1>
                     <hr>
-                    
-                    <label for="basic-url" class="form-label">Nome</label>
-                    <input type="text" class="form-control" placeholder="Nome do Artista" aria-label="Nome">
-                    <br>
                     <label for="basic-url" class="form-label">E-Mail</label>
-                    <input type="text" class="form-control" placeholder="emailDoArtista@dominio.com.br"
+                    <input type="text" class="form-control" placeholder="emailDoNegocio@dominio.com.br"
                         aria-label="E-Mail">
                     <br>
-                    <label for="basic-url" class="form-label">Telefone</label>
-                    <input type="text" class="form-control" placeholder="(31) 99999-9999"
-                        aria-label="Telefone">
-                    <br>
-                    <label for="basic-url" class="form-label">Endereço</label>
-                    <input type="text" class="form-control" placeholder="Endereço"
-                        aria-label="Endereço">
-                    <br>
-                    <label for="basic-url" class="form-label">Descrição</label>
-                    <input type="text" class="form-control" placeholder="Descrição do artista"
-                        aria-label="Descrição do artista">
+                    <label for="basic-url" class="form-label">Nome</label>
+                    <input type="text" class="form-control" placeholder="Nome do Negócio" aria-label="Nome">
                     <br>
                     <label for="basic-url" class="form-label">Senha</label>
-                    <input type="password" class="form-control" placeholder="Senha" aria-label="Senha">
+                    <input type="password" class="form-control" placeholder="Senha do Negócio" aria-label="Senha">
                     <hr>
                     <div class="text-center">
                         <button class="btn btn-dark" data-bs-toggle="modal">Registrar</button>
@@ -233,26 +208,20 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <h1 class="text-center">Registrar como cliente</h1>
-
-                    <form class="form--register" action="http://localhost:6789/produto" method="post" id="form-add">
-
-                        <label for="basic-url" class="input--register form-label">E-mail</label>
-                        <input type="text" class="form-control" placeholder="E-mail do Cliente" aria-label="E-mail">
-                        <br>
-                        <label for="basic-url" class="input--register form-label">Nome</label>
-                        <input type="text" class="form-control" placeholder="Nome do Cliente" aria-label="Nome">
-                        <br>
-                        <label for="basic-url" class="input--register form-label">Telefone</label>
-                        <input type="text" class="form-control" placeholder="(31) 99999-9999"
-                            aria-label="Telefone">
-                        <br>
-                        <label for="basic-url" class="input--register form-label">Senha</label>
-                        <input type="password" class="form-control" placeholder="Senha do Cliente" aria-label="Senha">
-                        
-                        <input type="submit" value="cadastrar" class="input--main__style input--button">
-
-                    </form>
-                    
+                    <hr>
+                    <label for="basic-url" class="form-label">E-Mail</label>
+                    <input type="text" id= "clienteEmail" class="form-control" placeholder="emailDoCliente@dominio.com.br"
+                        aria-label="E-Mail">
+                    <br>
+                    <label for="basic-url" class="form-label">Nome</label>
+                    <input type="text" id= "clienteNome" class="form-control" placeholder="Nome do Cliente" aria-label="Nome">
+                    <br>
+                    <label for="basic-url" class="form-label">Senha</label>
+                    <input type="password" id= "clienteSenha" class="form-control" placeholder="Senha do Cliente" aria-label="Senha">
+                    <hr>
+                    <div class="text-center">
+                        <button class="btn btn-dark" data-bs-toggle="modal">Registrar</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -286,19 +255,19 @@
             </div>
         </div>
     </div>
-    <!-- ENTRAR ARTISTA -->
+    <!-- ENTRAR NEGOCIO -->
     <div class="modal fade" id="modalEntrarNegocio" tabindex="-1" aria-labelledby="modalEntrarNegocioLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-body">
-                    <h1 class="text-center">Entrar como Artista</h1>
+                    <h1 class="text-center">Entrar como negócio</h1>
                     <hr>
-                    <label for="basic-url" class="form-label">E-mail</label>
-                    <input type="text" class="form-control" placeholder="E-mail do Negócio" aria-label="E-mail">
+                    <label for="basic-url" class="form-label">Nome</label>
+                    <input type="text" class="form-control" placeholder="Nome do Negócio" aria-label="Nome">
                     <br>
                     <label for="basic-url" class="form-label">Senha</label>
-                    <input type="password" class="form-control" placeholder="Senha do Artista" aria-label="Senha">
+                    <input type="password" class="form-control" placeholder="Senha do Negócio" aria-label="Senha">
                     <hr>
                     <div class="text-center">
                         <button class="btn btn-dark" data-bs-toggle="modal">Entrar</button>
@@ -315,8 +284,8 @@
                 <div class="modal-body">
                     <h1 class="text-center">Entrar como cliente</h1>
                     <hr>
-                    <label for="basic-url" class="form-label">E-mail</label>
-                    <input type="text" class="form-control" placeholder="E-mail do Cliente" aria-label="E-mail">
+                    <label for="basic-url" class="form-label">Nome</label>
+                    <input type="text" class="form-control" placeholder="Nome do Cliente" aria-label="Nome">
                     <br>
                     <label for="basic-url" class="form-label">Senha</label>
                     <input type="password" class="form-control" placeholder="Senha do Cliente" aria-label="Senha">
