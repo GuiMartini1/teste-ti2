@@ -25,6 +25,11 @@ public class Aplicacao {
         put("/login/cliente", (req, res) -> clienteService.loginCliente(req, res));
         put("/login/artista", (req, res) -> artistaService.loginArtista(req, res));
 
+        get("/cliente/:email", (req, res) -> clienteService.getClienteByEmail(req, res));
+        get("/artista/:email", (req, res) -> artistaService.getArtistaByEmail(req, res));
+
+
+
         //caminho para deletar cliente e artista
         delete("/deletar/cliente", (request, response) -> clienteService.excluirCliente(request, response));
         delete("/deletar/artista", (req, res) -> artistaService.excluirArtista(req,res));

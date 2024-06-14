@@ -50,6 +50,20 @@ public class ClienteService {
         }
     }
 
+    public Object getClienteByEmail(Request request, Response response) {
+        String email = request.params(":email");
+        Cliente cliente = clienteDAO.autenticarCliente(email);
+        if (cliente != null) {
+            response.status(200);
+            response.type("application/json");
+            return new Gson().toJson(cliente);
+        } else {
+            response.status(404); // Not Found
+            return "Cliente não encontrado";
+        }
+    }
+    
+
     public boolean excluirCliente(Request request, Response response) {
         try {
             Gson gson = new Gson();

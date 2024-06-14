@@ -77,16 +77,26 @@
         </div>
     </div>
     <script>
-        // Função para carregar os dados do localStorage ao carregar a página
         window.onload = function() {
             const clienteEmail = localStorage.getItem('cliente_email');
 
             if (clienteEmail) {
                 document.getElementById('email').value = clienteEmail;
+                fetch(`http://localhost:4567/cliente/${clienteEmail}`)
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Cliente não encontrado.');
+                        }
+                    })
+                    .then(cliente => {
+                        document.getElementById('nome').value = cliente.clienteNome;
+                    })
+                    .catch(error => {
+                        console.error('Erro ao buscar o cliente:', error);
+                    });
             }
-            
-            
-
         };
 
         function redirecionarParaDeletarCliente() {

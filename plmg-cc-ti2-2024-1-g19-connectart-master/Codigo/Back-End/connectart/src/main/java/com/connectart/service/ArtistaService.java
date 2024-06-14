@@ -51,6 +51,20 @@ public class ArtistaService {
         }
     }
 
+    public Object getArtistaByEmail(Request request, Response response) {
+        String email = request.params(":email");
+        Artista artista = artistaDAO.autenticarArtista(email);
+        if (artista != null) {
+            response.status(200);
+            response.type("application/json");
+            return new Gson().toJson(artista);
+        } else {
+            response.status(404); // Not Found
+            return "Artista não encontrado";
+        }
+    }
+    
+
     public boolean excluirArtista(Request request, Response response) {
         try {
             Gson gson = new Gson();
